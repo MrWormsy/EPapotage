@@ -6,16 +6,21 @@ public class Concierge {
 	
 	public Concierge () {
 		this.id_C = 0;
-		this.listBarvardConnected = null;
+		this.listBarvardConnected = new ArrayList<Bavard>();
 	}
 	
-	
+	public int getId_C() {
+		return id_C;
+	}
 	public void addBavard(Bavard barvard) {
 		listBarvardConnected.add(barvard);
 	}
 	
-	public void bavardConnection(Bavard bavard) {
-		System.out.println("Le bavard " + bavard.getName() + "est connecté");
+	public void bavardConnecte() {
+		for (Bavard bv : listBarvardConnected) {
+			System.out.println("Le bavard " + bv.getName() + " est connecté");
+		}
 	}
 	
+
 }

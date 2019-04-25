@@ -6,7 +6,9 @@ public class PapotageEvent {
 		this.message = message;
 	}
 	
-	public void dispatchMessage(Message message) {
-		
+	public Message dispatchMessage() {
+		return message;
 	}
+	
+	
 }

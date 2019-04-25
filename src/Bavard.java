@@ -14,12 +14,12 @@ public class Bavard {
 		return this.name;
 		}
 	
-	
-	
-	
-	public void sendMessage(int idConciergeCible, Message message) {    //This method will send the message to the right Concierge
-		//PAPOTAGE EVENT
+	public void sendMessage(Message message) {    //This method will send the message to the right Concierge
+		PapotageEvent toSend = new PapotageEvent(message);
 	}
 	
+	public void lookForMessage() {
+		
+	}
 	
 }
