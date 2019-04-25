@@ -45,7 +45,7 @@ public class LogInToBavardGUI {
 				// We get the name and if the Bavard already exists we log to him, otherwise we deny the log in
 				if (EPapotage.bavardExists(textfield.getText())) {
 					
-					EPapotage.setCurrentBavard(textfield.getText());
+					EPapotage.setCurrentBavard(EPapotage.getBavardFromName(textfield.getText()));
 					
 					f.dispose();
 					

@@ -1,3 +1,4 @@
+package fr.mrwormsy.inf641.epapotage;
 import java.util.*;
 public class Bavard {
 	private int id_B;

@@ -6,8 +6,10 @@ import java.awt.event.ActionListener;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 
+import fr.mrwormsy.inf641.epapotage.Bavard;
 import fr.mrwormsy.inf641.epapotage.EPapotage;
 
 public class CreateBavardGUI {
@@ -41,8 +43,20 @@ public class CreateBavardGUI {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				
-				// We create a Bavard and we add it to the list of Bavard in EPapotage
-				EPapotage.addBavard(textfield.getText());
+				if (!EPapotage.bavardExists(textfield.getText())) {
+					// We create a Bavard and we add it to the list of Bavard in EPapotage
+					
+					Bavard barvard = new Bavard(textfield.getText());
+					
+					EPapotage.addBavard(barvard);
+					
+					EPapotage.getConcierge().addBavard(barvard);
+										
+				} else {
+					JOptionPane.showMessageDialog(f, "This bavard already exists !");
+				}
+				
+				
 				
 				f.dispose();
 			}          

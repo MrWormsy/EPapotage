@@ -1,3 +1,4 @@
+package fr.mrwormsy.inf641.epapotage;
 
 public class PapotageEvent {
 	private Message message;

@@ -1,3 +1,4 @@
+package fr.mrwormsy.inf641.epapotage;
 
 public class Message {
 	private int id_M;

@@ -15,6 +15,9 @@ import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
+import fr.mrwormsy.inf641.epapotage.EPapotage;
+import fr.mrwormsy.inf641.epapotage.Message;
+
 public class Gui extends JFrame {
 
 	private static final long serialVersionUID = 1L;
@@ -67,7 +70,7 @@ public class Gui extends JFrame {
 	    //Content of the frame
 	    
 	    this.chatDisplay = new JLabel();
-	    this.chatDisplay.setText("Chat initialized");
+	    this.chatDisplay.setText("----- Chat initialized -----");
 	    this.chatDisplay.setBounds(25, 0, 550, 350);
 	    
 	    this.chatWritter = new JTextField("Message");
@@ -126,7 +129,7 @@ public class Gui extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				
-				if (chatWritter.getText().length() >= 2) {
+				if (chatWritter.getText().length() >= 2 && EPapotage.getCurrentBavard() != null) {
 					sendMessage();
 				}				
 			}
@@ -143,7 +146,10 @@ public class Gui extends JFrame {
 	}
 	
 	public void sendMessage() {
-		this.chatDisplay.setText(convertToMultiline(this.chatDisplay.getText().replaceAll("(<html>)", "").replaceAll("(</html>)", "") + "\n" + this.chatWritter.getText()));
+		this.chatDisplay.setText(convertToMultiline(this.chatDisplay.getText().replaceAll("(<html>)", "").replaceAll("(</html>)", "") + "\n" + EPapotage.getCurrentBavard().getName() + " wrote : " + this.chatWritter.getText()));
+
+		EPapotage.getCurrentBavard().sendMessage(new Message(EPapotage.getConcierge().getId_C(),"Sujet",this.chatWritter.getText()));
+		
 		this.chatWritter.setText("");
 	}
 }
