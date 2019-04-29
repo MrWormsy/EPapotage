@@ -57,6 +57,9 @@ public class LogInToBavardGUI {
 				
 			}          
 		});
+		
+		
+		f.getRootPane().setDefaultButton(b);
 	}
 		
 	

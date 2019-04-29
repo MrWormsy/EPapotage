@@ -1,15 +1,14 @@
 package fr.mrwormsy.inf641.epapotage.gui;
 
-import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import javax.swing.BoxLayout;
 import javax.swing.GroupLayout;
-import javax.swing.GroupLayout.Alignment;
 import javax.swing.JButton;
 import javax.swing.JFrame;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
 import fr.mrwormsy.inf641.epapotage.Bavard;
@@ -22,10 +21,12 @@ private static final long serialVersionUID = 1L;
 		
 	private JPanel writeAndSendPanel;
 	
-	private JLabel chatDisplay;
+	private JTextArea chatDisplay;
 	private JTextField chatWritter;
 	
 	private JButton sendMessageButton;
+	
+	private JPanel sendPanel;
 	
 	private Bavard bavard;
 	
@@ -41,7 +42,8 @@ private static final long serialVersionUID = 1L;
 	   	    
 	    //Content of the frame
 	    
-	    this.chatDisplay = new JLabel();
+	    this.chatDisplay = new JTextArea();
+	    this.chatDisplay.setEditable(false);
 	    this.chatDisplay.setText("----- Chat initialized -----");
 	    this.chatDisplay.setBounds(25, 0, 550, 350);
 	    
@@ -52,15 +54,12 @@ private static final long serialVersionUID = 1L;
 	    this.sendMessageButton.setBounds(525, 370, 50, 20);
 	    
 	    this.writeAndSendPanel = new JPanel();
+	    this.sendPanel = new JPanel();
 	    
-	    GroupLayout layout = new GroupLayout(this.writeAndSendPanel);
-	    this.writeAndSendPanel.setLayout(layout);
-	   
-	    layout.setAutoCreateGaps(true);
-	    layout.setAutoCreateContainerGaps(true);
-
 	    this.bavard = EPapotage.getBavardFromName(name);
-
+	    
+	    /*
+	    
 	    GroupLayout.SequentialGroup hGroup = layout.createSequentialGroup();
 	    
 	    hGroup.addGroup(layout.createParallelGroup().
@@ -76,16 +75,39 @@ private static final long serialVersionUID = 1L;
 	    		addComponent(this.chatWritter).addComponent(this.sendMessageButton));
 	    
 	    layout.setVerticalGroup(vGroup);
-	    
-	    this.add(this.chatDisplay, BorderLayout.NORTH);
-	    this.add(this.writeAndSendPanel, BorderLayout.SOUTH);
-	    
+	    	
+	   	*/
+	            
+        writeAndSendPanel.setLayout(new BoxLayout(writeAndSendPanel, BoxLayout.Y_AXIS));
+        writeAndSendPanel.add(this.chatDisplay);
+        writeAndSendPanel.add(sendPanel);
+        
+		GroupLayout groupLayout = new GroupLayout(sendPanel); 
+		groupLayout.setAutoCreateGaps(true);  
+        groupLayout.setAutoCreateContainerGaps(true);  
+        sendPanel.setLayout(groupLayout);
+        
+
+        groupLayout.setHorizontalGroup(  
+                    groupLayout.createSequentialGroup()  
+                                .addComponent(this.chatWritter)  
+                                .addComponent(this.sendMessageButton));  
+        groupLayout.setVerticalGroup(  
+                     groupLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)  
+                                .addComponent(this.chatWritter)  
+                                .addComponent(this.sendMessageButton));
+		
+        this.setContentPane(writeAndSendPanel);
+	            
 	    this.sendMessageButton.addActionListener(new ActionListener() {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				if (chatWritter.getText().length() >= 2 && EPapotage.getCurrentBavard() != null) {
-					EPapotage.getConcierge().dispatchMessageBetweenBavards(name, chatWritter.getText());
+					
+					// DEBUG
+					
+					//EPapotage.getConcierge().dispatchMessageBetweenBavards(name, chatWritter.getText());
 					
 					for (BavardFrame bf : EPapotage.getBavardsFrames()) {
 						bf.sendMessage(name, chatWritter.getText());
@@ -95,6 +117,8 @@ private static final long serialVersionUID = 1L;
 				}				
 			}
 		});		
+	    
+	    this.writeAndSendPanel.getRootPane().setDefaultButton(this.sendMessageButton);
 	}
 	
 	public static String convertToMultiline(String orig)
@@ -103,7 +127,8 @@ private static final long serialVersionUID = 1L;
 	}
 	
 	public void sendMessage(String name, String text) {
-		this.chatDisplay.setText(convertToMultiline(this.chatDisplay.getText().replaceAll("(<html>)", "").replaceAll("(</html>)", "") + "\n" + name + " wrote : " + text));		
+		//this.chatDisplay.setText(convertToMultiline(this.chatDisplay.getText().replaceAll("(<html>)", "").replaceAll("(</html>)", "") + "\n" + name + " wrote : " + text));		
+		this.chatDisplay.setText(this.chatDisplay.getText() + "\n" + name + " wrote : " + text);
 	}
 
 	public Bavard getBavard() {

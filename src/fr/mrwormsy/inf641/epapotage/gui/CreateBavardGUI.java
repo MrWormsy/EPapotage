@@ -63,6 +63,7 @@ public class CreateBavardGUI {
 			}          
 		});
 		
+		f.getRootPane().setDefaultButton(b);
 		
 	}
 	
