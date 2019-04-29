@@ -47,6 +47,8 @@ public class LogInToBavardGUI {
 					
 					EPapotage.setCurrentBavard(EPapotage.getBavardFromName(textfield.getText()));
 					
+					EPapotage.getCurrentBavard().getFrame().setVisible(true);
+					
 					f.dispose();
 					
 				} else {

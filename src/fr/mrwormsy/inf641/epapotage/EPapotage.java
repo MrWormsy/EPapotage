@@ -21,7 +21,7 @@ public class EPapotage {
 					
 		setTheListener(new TheListener());				
 		
-		new Gui();
+		getConcierge().setGui(new Gui());
 	}
 
 	public static void addBavard(Bavard bavard) {
