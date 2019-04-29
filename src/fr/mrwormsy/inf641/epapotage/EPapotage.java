@@ -2,24 +2,25 @@ package fr.mrwormsy.inf641.epapotage;
 
 import java.util.ArrayList;
 
+import fr.mrwormsy.inf641.epapotage.gui.BavardFrame;
 import fr.mrwormsy.inf641.epapotage.gui.Gui;
 
 public class EPapotage {
 
 	private static ArrayList<Bavard> bavards;
+	private static ArrayList<BavardFrame> bavardsFrames;
 	private static Bavard currentBavard;
 	
 	private static Concierge concierge;
-	private static TheListener theListener;
 	
 	public static void main(String[] args) {
 		
 		setBavards(new ArrayList<Bavard>());
+		setBavardsFrames(new ArrayList<BavardFrame>());
+		
 		setCurrentBavard(null);
 		
-		setConcierge(new Concierge());
-					
-		setTheListener(new TheListener());				
+		setConcierge(new Concierge());	
 		
 		getConcierge().setGui(new Gui());
 	}
@@ -71,14 +72,26 @@ public class EPapotage {
 		EPapotage.concierge = concierge;
 	}
 
-	public static TheListener getTheListener() {
-		return theListener;
+	public static ArrayList<BavardFrame> getBavardsFrames() {
+		return bavardsFrames;
 	}
 
-	public static void setTheListener(TheListener theListener) {
-		EPapotage.theListener = theListener;
+	public static void setBavardsFrames(ArrayList<BavardFrame> bavardsFrames) {
+		EPapotage.bavardsFrames = bavardsFrames;
 	}
 
-	
-	
+	public static void addBavardFrame(BavardFrame bavardFrame) {
+		bavardsFrames.add(bavardFrame);
+		
+	}
+
+	public static BavardFrame getBavardFrameFromName(String bavardFrameName) {
+		for (BavardFrame b : bavardsFrames) {
+			if (b.getBavard().getName().equalsIgnoreCase(bavardFrameName)) {
+				return b;
+			}
+		}
+		return null;
+		
+	}	
 }

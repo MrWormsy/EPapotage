@@ -49,6 +49,7 @@ public class CreateBavardGUI {
 					Bavard barvard = new Bavard(textfield.getText());
 					
 					EPapotage.addBavard(barvard);
+					EPapotage.addBavardFrame(new BavardFrame(textfield.getText()));
 					
 					EPapotage.getConcierge().addBavard(barvard);
 										

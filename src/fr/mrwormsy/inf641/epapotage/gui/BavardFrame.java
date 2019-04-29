@@ -12,8 +12,8 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
+import fr.mrwormsy.inf641.epapotage.Bavard;
 import fr.mrwormsy.inf641.epapotage.EPapotage;
-import fr.mrwormsy.inf641.epapotage.Message;
 
 public class BavardFrame extends JFrame {
 
@@ -26,6 +26,8 @@ private static final long serialVersionUID = 1L;
 	private JTextField chatWritter;
 	
 	private JButton sendMessageButton;
+	
+	private Bavard bavard;
 	
 	
 	public BavardFrame(String name) {
@@ -57,6 +59,7 @@ private static final long serialVersionUID = 1L;
 	    layout.setAutoCreateGaps(true);
 	    layout.setAutoCreateContainerGaps(true);
 
+	    this.bavard = EPapotage.getBavardFromName(name);
 
 	    GroupLayout.SequentialGroup hGroup = layout.createSequentialGroup();
 	    
@@ -81,10 +84,14 @@ private static final long serialVersionUID = 1L;
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				
 				if (chatWritter.getText().length() >= 2 && EPapotage.getCurrentBavard() != null) {
 					EPapotage.getConcierge().dispatchMessageBetweenBavards(name, chatWritter.getText());
-					//sendMessage();
+					
+					for (BavardFrame bf : EPapotage.getBavardsFrames()) {
+						bf.sendMessage(name, chatWritter.getText());
+					}	
+					
+					chatWritter.setText("");
 				}				
 			}
 		});		
@@ -96,11 +103,15 @@ private static final long serialVersionUID = 1L;
 	}
 	
 	public void sendMessage(String name, String text) {
-		this.chatDisplay.setText(convertToMultiline(this.chatDisplay.getText().replaceAll("(<html>)", "").replaceAll("(</html>)", "") + "\n" + name + " wrote : " + text));
+		this.chatDisplay.setText(convertToMultiline(this.chatDisplay.getText().replaceAll("(<html>)", "").replaceAll("(</html>)", "") + "\n" + name + " wrote : " + text));		
+	}
 
-		EPapotage.getCurrentBavard().sendMessage(new Message(EPapotage.getConcierge().getId_C(),"Sujet",this.chatWritter.getText()));
-		
-		this.chatWritter.setText("");
+	public Bavard getBavard() {
+		return bavard;
+	}
+
+	public void setBavard(Bavard bavard) {
+		this.bavard = bavard;
 	}
 	
 }
