@@ -1,21 +1,10 @@
 package fr.mrwormsy.inf641.epapotage;
 import java.util.ArrayList;
 
-import fr.mrwormsy.inf641.epapotage.gui.Gui;
-
 public class Concierge {
-	public Gui getGui() {
-		return gui;
-	}
-
-	public void setGui(Gui gui) {
-		this.gui = gui;
-	}
-
 	private int id_C;
 	private ArrayList<Bavard> listBarvardConnected;
 	private ArrayList<String> messages;
-	private Gui gui;
 	
 	public Concierge () {
 		this.id_C = 0;
@@ -60,8 +49,5 @@ public class Concierge {
 		for(Bavard bv : this.listBarvardConnected) {
 			bv.sendMessage(name, text);
 		}
-		
 	}
-	
-
 }

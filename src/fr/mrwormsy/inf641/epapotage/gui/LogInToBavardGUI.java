@@ -49,6 +49,12 @@ public class LogInToBavardGUI {
 										
 					EPapotage.getBavardFrameFromName(textfield.getText()).setVisible(true);;
 								
+					for (BavardFrame bf : EPapotage.getBavardsFrames()) {
+						bf.bavardConnection(textfield.getText());
+					}
+					
+					EPapotage.getConciergeFrame().writeLogs(textfield.getText() + " logged in");
+					
 					f.dispose();
 					
 				} else {

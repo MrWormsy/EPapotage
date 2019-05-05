@@ -3,7 +3,7 @@ package fr.mrwormsy.inf641.epapotage;
 import java.util.ArrayList;
 
 import fr.mrwormsy.inf641.epapotage.gui.BavardFrame;
-import fr.mrwormsy.inf641.epapotage.gui.Gui;
+import fr.mrwormsy.inf641.epapotage.gui.ConciergeFrame;
 
 public class EPapotage {
 
@@ -12,6 +12,7 @@ public class EPapotage {
 	private static Bavard currentBavard;
 	
 	private static Concierge concierge;
+	private static ConciergeFrame conciergeFrame;
 	
 	public static void main(String[] args) {
 		
@@ -22,7 +23,17 @@ public class EPapotage {
 		
 		setConcierge(new Concierge());	
 		
-		getConcierge().setGui(new Gui());
+		setConciergeFrame(new ConciergeFrame());
+		
+		conciergeFrame.setConcierge(getConcierge());
+	}
+
+	public static ConciergeFrame getConciergeFrame() {
+		return conciergeFrame;
+	}
+
+	public static void setConciergeFrame(ConciergeFrame conciergeFrame) {
+		EPapotage.conciergeFrame = conciergeFrame;
 	}
 
 	public static void addBavard(Bavard bavard) {

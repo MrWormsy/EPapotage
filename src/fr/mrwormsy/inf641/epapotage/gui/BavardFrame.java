@@ -1,13 +1,19 @@
 package fr.mrwormsy.inf641.epapotage.gui;
 
+import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.time.Instant;
+import java.util.Date;
 
 import javax.swing.BoxLayout;
 import javax.swing.GroupLayout;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
@@ -30,12 +36,21 @@ private static final long serialVersionUID = 1L;
 	
 	private Bavard bavard;
 	
+	private JScrollPane displayScrollPanel;
+	
 	
 	public BavardFrame(String name) {
 
 		this.setTitle(name);
 		this.setSize(600, 400);
 		this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		
+		this.addWindowListener(new WindowAdapter() {
+			@Override
+			public void windowClosed(WindowEvent windowEvent) {
+				EPapotage.getConciergeFrame().writeLogs(name + " has logged out");
+		    }
+		});
 
 	    this.setLocationRelativeTo(null);
 	    this.setResizable(false);
@@ -44,8 +59,10 @@ private static final long serialVersionUID = 1L;
 	    
 	    this.chatDisplay = new JTextArea();
 	    this.chatDisplay.setEditable(false);
-	    this.chatDisplay.setText("----- Chat initialized -----");
-	    this.chatDisplay.setBounds(25, 0, 550, 350);
+	    
+	    displayScrollPanel = new JScrollPane (this.chatDisplay, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+        this.displayScrollPanel.setPreferredSize(new Dimension(594, 321));
+        //this.chatDisplay.setMaximumSize(new Dimension(594, 300));
 	    
 	    this.chatWritter = new JTextField("Message");
 	    this.chatWritter.setBounds(25, 370, 475, 20);
@@ -54,32 +71,13 @@ private static final long serialVersionUID = 1L;
 	    this.sendMessageButton.setBounds(525, 370, 50, 20);
 	    
 	    this.writeAndSendPanel = new JPanel();
+	    this.writeAndSendPanel.setPreferredSize(new Dimension(10, 10));
 	    this.sendPanel = new JPanel();
 	    
 	    this.bavard = EPapotage.getBavardFromName(name);
-	    
-	    /*
-	    
-	    GroupLayout.SequentialGroup hGroup = layout.createSequentialGroup();
-	    
-	    hGroup.addGroup(layout.createParallelGroup().
-	    		addComponent(this.chatWritter));
-	    hGroup.addGroup(layout.createParallelGroup().
-	    		addComponent(this.sendMessageButton));
-	    
-	    layout.setHorizontalGroup(hGroup);
-
-	    GroupLayout.SequentialGroup vGroup = layout.createSequentialGroup();
-	    
-	    vGroup.addGroup(layout.createParallelGroup(Alignment.BASELINE).
-	    		addComponent(this.chatWritter).addComponent(this.sendMessageButton));
-	    
-	    layout.setVerticalGroup(vGroup);
-	    	
-	   	*/
-	            
+	   	            
         writeAndSendPanel.setLayout(new BoxLayout(writeAndSendPanel, BoxLayout.Y_AXIS));
-        writeAndSendPanel.add(this.chatDisplay);
+        writeAndSendPanel.add(this.displayScrollPanel);
         writeAndSendPanel.add(sendPanel);
         
 		GroupLayout groupLayout = new GroupLayout(sendPanel); 
@@ -98,7 +96,7 @@ private static final long serialVersionUID = 1L;
                                 .addComponent(this.sendMessageButton));
 		
         this.setContentPane(writeAndSendPanel);
-	            
+        
 	    this.sendMessageButton.addActionListener(new ActionListener() {
 			
 			@Override
@@ -111,24 +109,35 @@ private static final long serialVersionUID = 1L;
 					
 					for (BavardFrame bf : EPapotage.getBavardsFrames()) {
 						bf.sendMessage(name, chatWritter.getText());
-					}	
+					}
+					
+					//Write the logs
+					EPapotage.getConciergeFrame().writeLogs(name + ": " + chatWritter.getText());
 					
 					chatWritter.setText("");
 				}				
 			}
 		});		
 	    
-	    this.writeAndSendPanel.getRootPane().setDefaultButton(this.sendMessageButton);
+	    this.writeAndSendPanel.getRootPane().setDefaultButton(this.sendMessageButton);	    
 	}
 	
-	public static String convertToMultiline(String orig)
-	{
+	public void bavardConnection(String name) {
+		if (this.chatDisplay.getText().isEmpty()) {
+			this.chatDisplay.setText("Say hello to our new Bavard " + name);		
+		} else {
+			this.chatDisplay.setText(this.chatDisplay.getText() + "\n" + "Say hello to our new Bavard " + name);		
+		}
+		
+	}
+
+	public static String convertToMultiline(String orig) {
 	    return "<html>" + orig.replaceAll("\n", "<br>") + "</html>";
 	}
 	
 	public void sendMessage(String name, String text) {
 		//this.chatDisplay.setText(convertToMultiline(this.chatDisplay.getText().replaceAll("(<html>)", "").replaceAll("(</html>)", "") + "\n" + name + " wrote : " + text));		
-		this.chatDisplay.setText(this.chatDisplay.getText() + "\n" + name + " wrote : " + text);
+		this.chatDisplay.setText(this.chatDisplay.getText() + "\n" + name + ": " + text);
 	}
 
 	public Bavard getBavard() {

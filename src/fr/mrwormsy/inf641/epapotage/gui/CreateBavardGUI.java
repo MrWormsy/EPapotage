@@ -52,6 +52,8 @@ public class CreateBavardGUI {
 					EPapotage.addBavardFrame(new BavardFrame(textfield.getText()));
 					
 					EPapotage.getConcierge().addBavard(barvard);
+					
+					EPapotage.getConciergeFrame().writeLogs(textfield.getText() + " has been registered as a new Bavard");
 										
 				} else {
 					JOptionPane.showMessageDialog(f, "This bavard already exists !");

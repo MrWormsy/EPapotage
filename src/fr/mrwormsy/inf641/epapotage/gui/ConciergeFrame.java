@@ -1,16 +1,24 @@
 package fr.mrwormsy.inf641.epapotage.gui;
 
 import java.awt.BorderLayout;
+import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.time.Instant;
+import java.util.Date;
 
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
 
-public class Gui extends JFrame {
+import fr.mrwormsy.inf641.epapotage.Concierge;
+import fr.mrwormsy.inf641.epapotage.EPapotage;
+
+public class ConciergeFrame extends JFrame {
 
 	private static final long serialVersionUID = 1L;
 	
@@ -24,10 +32,16 @@ public class Gui extends JFrame {
 	private JMenuItem listBavardItem;
 	private JMenuItem loginToBavard;
 		
-	private JLabel chatDisplay;
+	private JTextArea chatDisplay;
 	
-	public Gui() {
+	private JScrollPane displayScrollPanel;
 
+	private Concierge concierge;
+	
+	public ConciergeFrame() {
+
+		this.setConcierge(EPapotage.getConcierge());
+		
 		this.setTitle("TEST");
 		this.setSize(800, 600);
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -56,11 +70,13 @@ public class Gui extends JFrame {
 	   	    
 	    //Content of the frame
 	    
-	    this.chatDisplay = new JLabel();
-	    this.chatDisplay.setText("----- Chat initialized -----");
-	    this.chatDisplay.setBounds(25, 0, 550, 350);
+	    this.chatDisplay = new JTextArea("--- Chat initialized ---");
+	    this.chatDisplay.setEditable(false);
+	    
+	    displayScrollPanel = new JScrollPane (this.chatDisplay, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+        this.displayScrollPanel.setPreferredSize(new Dimension(594, 500));
 	    	    
-	    this.add(this.chatDisplay, BorderLayout.NORTH);
+	    this.add(this.displayScrollPanel, BorderLayout.NORTH);
 	    
 	    this.createBavardItem.addActionListener(new ActionListener() {
 			
@@ -81,5 +97,21 @@ public class Gui extends JFrame {
 	    
 	    this.setVisible(true);;
 		
+	}
+	
+	public static String convertToMultiline(String orig) {
+	    return "<html>" + orig.replaceAll("\n", "<br>") + "</html>";
+	}
+
+	public void writeLogs(String log) {
+		this.chatDisplay.setText(this.chatDisplay.getText() + "\n" + "(" + Date.from(Instant.EPOCH) + ") " + log);
+	}
+	
+	public Concierge getConcierge() {
+		return concierge;
+	}
+
+	public void setConcierge(Concierge concierge) {
+		this.concierge = concierge;
 	}
 }
