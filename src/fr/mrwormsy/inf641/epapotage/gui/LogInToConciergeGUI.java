@@ -16,9 +16,8 @@ import org.apache.commons.codec.digest.DigestUtils;
 
 import fr.mrwormsy.inf641.epapotage.EPapotage;
 
-public class LogInToBavardGUI {
-	
-	
+public class LogInToConciergeGUI {
+
 	private JFrame frame;
 	private JTextField usernameInput;
 	private JPasswordField passInput;
@@ -27,9 +26,9 @@ public class LogInToBavardGUI {
 	
 	private JLabel passLabel;
 	
-	public LogInToBavardGUI() {
+	public LogInToConciergeGUI() {
 
-		frame = new JFrame("Log in to Bavard");
+		frame = new JFrame("Log in to Concierge");
 		frame.setBounds(100, 100, 300, 185);
 		frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		
@@ -89,32 +88,20 @@ public class LogInToBavardGUI {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				
-				// We get the name and if the Bavard already exists we log to him, otherwise we deny the log in
-				if (EPapotage.bavardExists(usernameInput.getText())) {
+				// We get the name and if the Concierge already exists we log him in, otherwise we deny him.
+				if (EPapotage.conciergeExists(usernameInput.getText())) {
 					
 					// Check if the password entered matchs to the Bavard password
-					if (DigestUtils.md5Hex(passInput.getText()).equalsIgnoreCase(EPapotage.getBavardFrameFromName(usernameInput.getText()).getPassword())) {
+					if (DigestUtils.md5Hex(passInput.getText()).equalsIgnoreCase(EPapotage.getConciergeFrameFromName(usernameInput.getText()).getPassword())) {
 						
-						
-						//Display the bavard frame
-						EPapotage.getBavardFrameFromName(usernameInput.getText()).setVisible(true);;
-									
-						/*
-						
-						for (BavardFrame bf : EPapotage.getBavardsFrames()) {
-							bf.bavardConnection(usernameInput.getText());
-						}
-						
-						*/
-						
-						//EPapotage.getConciergeFrame().writeLogs(usernameInput.getText() + " logged in");
-						
+						//We display the frame
+						EPapotage.getConciergeFrameFromName(usernameInput.getText()).setVisible(true);;						
 						frame.dispose();
 					} else {
 						JOptionPane.showMessageDialog(frame, "Your password is incorect !");
 					}					
 				} else {
-					JOptionPane.showMessageDialog(frame, "This bavard does not exist !");
+					JOptionPane.showMessageDialog(frame, "This concierge does not exist !");
 				}
 				
 			}
@@ -122,4 +109,5 @@ public class LogInToBavardGUI {
 		
 		frame.setVisible(true);
 	}
+	
 }

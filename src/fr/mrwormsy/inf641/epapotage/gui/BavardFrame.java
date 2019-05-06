@@ -5,8 +5,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.time.Instant;
-import java.util.Date;
 
 import javax.swing.BoxLayout;
 import javax.swing.GroupLayout;
@@ -36,10 +34,12 @@ private static final long serialVersionUID = 1L;
 	
 	private Bavard bavard;
 	
+	private String password;
+	
 	private JScrollPane displayScrollPanel;
 	
 	
-	public BavardFrame(String name) {
+	public BavardFrame(Bavard bavard, String name) {
 
 		this.setTitle(name);
 		this.setSize(600, 400);
@@ -74,7 +74,7 @@ private static final long serialVersionUID = 1L;
 	    this.writeAndSendPanel.setPreferredSize(new Dimension(10, 10));
 	    this.sendPanel = new JPanel();
 	    
-	    this.bavard = EPapotage.getBavardFromName(name);
+	    this.bavard = bavard;
 	   	            
         writeAndSendPanel.setLayout(new BoxLayout(writeAndSendPanel, BoxLayout.Y_AXIS));
         writeAndSendPanel.add(this.displayScrollPanel);
@@ -101,13 +101,8 @@ private static final long serialVersionUID = 1L;
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				if (chatWritter.getText().length() >= 2 && EPapotage.getCurrentBavard() != null) {
-					
-					// DEBUG
-					
-					//EPapotage.getConcierge().dispatchMessageBetweenBavards(name, chatWritter.getText());
-					
-					for (BavardFrame bf : EPapotage.getBavardsFrames()) {
+				if (chatWritter.getText().length() >= 2 && EPapotage.getCurrentBavard() != null) {					
+					for (BavardFrame bf : EPapotage.getBavardFrames()) {
 						bf.sendMessage(name, chatWritter.getText());
 					}
 					
@@ -124,9 +119,9 @@ private static final long serialVersionUID = 1L;
 	
 	public void bavardConnection(String name) {
 		if (this.chatDisplay.getText().isEmpty()) {
-			this.chatDisplay.setText("Say hello to our new Bavard " + name);		
+			this.chatDisplay.setText("Hello " + name);		
 		} else {
-			this.chatDisplay.setText(this.chatDisplay.getText() + "\n" + "Say hello to our new Bavard " + name);		
+			this.chatDisplay.setText(this.chatDisplay.getText() + "\n" + "Hello " + name);		
 		}
 		
 	}
@@ -146,6 +141,14 @@ private static final long serialVersionUID = 1L;
 
 	public void setBavard(Bavard bavard) {
 		this.bavard = bavard;
+	}
+
+	public String getPassword() {
+		return password;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
 	}
 	
 }

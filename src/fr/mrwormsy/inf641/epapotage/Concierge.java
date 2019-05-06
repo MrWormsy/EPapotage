@@ -3,13 +3,15 @@ import java.util.ArrayList;
 
 public class Concierge {
 	private int id_C;
+	private String name;
 	private ArrayList<Bavard> listBarvardConnected;
 	private ArrayList<String> messages;
 	
-	public Concierge () {
+	public Concierge (String name) {
 		this.id_C = 0;
 		this.listBarvardConnected = new ArrayList<Bavard>();
 		this.messages = new ArrayList<String>();
+		this.name = name;
 	}
 	
 	public ArrayList<Bavard> getListBarvardConnected() {
@@ -49,5 +51,13 @@ public class Concierge {
 		for(Bavard bv : this.listBarvardConnected) {
 			bv.sendMessage(name, text);
 		}
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
 	}
 }

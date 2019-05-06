@@ -14,11 +14,10 @@ import javax.swing.JTextField;
 
 import org.apache.commons.codec.digest.DigestUtils;
 
-import fr.mrwormsy.inf641.epapotage.Bavard;
+import fr.mrwormsy.inf641.epapotage.Concierge;
 import fr.mrwormsy.inf641.epapotage.EPapotage;
 
-public class CreateBavardGUI {
-
+public class CreateConciergeGUI {
 	private JFrame frame;
 	private JPasswordField confirmInput;
 	private JTextField usernameInput;
@@ -30,11 +29,11 @@ public class CreateBavardGUI {
 	
 	private JLabel confirmLabel;
 	
-	public CreateBavardGUI() {
+	public CreateConciergeGUI() {
 
-		frame = new JFrame("Create Bavard");
-		
-		frame.setBounds(100, 100, 300, 250);
+		frame = new JFrame("Create Concierge");
+
+		frame.setBounds(100, 100, 350, 250);
 		frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		
 		usernameLabel = new JLabel("Username");
@@ -54,7 +53,7 @@ public class CreateBavardGUI {
 		passInput.setColumns(10);
 		passInput.setEchoChar('•');
 		
-		JButton registerButton = new JButton("Register Bavard");
+		JButton registerButton = new JButton("Register Concierge");
 		GroupLayout groupLayout = new GroupLayout(frame.getContentPane());
 		groupLayout.setHorizontalGroup(
 			groupLayout.createParallelGroup(Alignment.LEADING)
@@ -108,7 +107,7 @@ public class CreateBavardGUI {
 					return;
 				}
 				
-				if (!EPapotage.bavardExists(usernameInput.getText())) {
+				if (!EPapotage.conciergeExists(usernameInput.getText())) {
 					
 					//Check if the two passwords are identical
 					String md5HexPass = DigestUtils.md5Hex(passInput.getText());
@@ -117,17 +116,17 @@ public class CreateBavardGUI {
 					if (md5HexConfirm.equals(md5HexPass)) {
 						// We create a Bavard and we add it to the list of Bavard in EPapotage
 						
-						//First we create a new Bavard
-						Bavard bavard = new Bavard(usernameInput.getText());
+						//First we create a new Concierge
+						Concierge concierge = new Concierge(usernameInput.getText());
 						
-						//We add this Bavard to a new BavardFrame
-						BavardFrame bavardFrame = new BavardFrame(bavard, usernameInput.getText());
+						//We add this Concierge to a new ConciergeFrame
+						ConciergeFrame conciergeFrame = new ConciergeFrame(concierge);
 						
-						//We add this BavardFrame to the list of BavardFrame of the Administrator
-						EPapotage.getBavardFrames().add(bavardFrame);
+						//We add this ConciergeFrame to the list of ConciergeFrame of the Administrator
+						EPapotage.getConciergeFrames().add(conciergeFrame);
 						
-						//Set the BavardFrame password
-						bavardFrame.setPassword(md5HexPass);
+						//Set the ConciergeFrame password
+						conciergeFrame.setPassword(md5HexPass);
 						
 						/*
 						
@@ -149,12 +148,12 @@ public class CreateBavardGUI {
 						JOptionPane.showMessageDialog(frame, "The passwords do not match !");
 					}					
 				} else {
-					JOptionPane.showMessageDialog(frame, "This bavard already exists !");
+					JOptionPane.showMessageDialog(frame, "This concierge already exists !");
 				}				
 			}
 		});
 		
 		
 		frame.getRootPane().setDefaultButton(registerButton);
-	}	
+	}
 }
