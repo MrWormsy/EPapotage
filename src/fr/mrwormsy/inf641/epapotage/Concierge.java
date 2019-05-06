@@ -37,8 +37,13 @@ public class Concierge {
 	public int getId_C() {
 		return id_C;
 	}
+	
 	public void addBavard(Bavard barvard) {
 		listBarvardConnected.add(barvard);
+	}
+	
+	public void removeBavard(Bavard barvard) {
+		listBarvardConnected.remove(barvard);
 	}
 	
 	public void bavardConnecte() {

@@ -6,6 +6,7 @@ import java.awt.event.ActionListener;
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
 import javax.swing.JButton;
+import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -18,6 +19,9 @@ import fr.mrwormsy.inf641.epapotage.Concierge;
 import fr.mrwormsy.inf641.epapotage.EPapotage;
 
 public class CreateConciergeGUI {
+	
+	//Variables
+	
 	private JFrame frame;
 	private JPasswordField confirmInput;
 	private JTextField usernameInput;
@@ -127,6 +131,13 @@ public class CreateConciergeGUI {
 						
 						//Set the ConciergeFrame password
 						conciergeFrame.setPassword(md5HexPass);
+						
+						//Add this ConciergeFrame to all the BavardFrames that exist
+						for (BavardFrame bf : EPapotage.getBavardFrames()) {
+							bf.getConnectToConcierge().add(new JCheckBoxMenuItem(concierge.getName()));
+						}
+						
+						
 						
 						/*
 						

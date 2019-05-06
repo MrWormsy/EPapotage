@@ -33,13 +33,6 @@ public class EPapotage {
 		
 		
 		
-		
-		
-		
-		
-		
-		
-		
 		/*
 		
 		setBavards(new ArrayList<Bavard>());

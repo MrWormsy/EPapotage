@@ -9,7 +9,10 @@ import java.awt.event.WindowEvent;
 import javax.swing.BoxLayout;
 import javax.swing.GroupLayout;
 import javax.swing.JButton;
+import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JFrame;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
@@ -38,7 +41,16 @@ private static final long serialVersionUID = 1L;
 	
 	private JScrollPane displayScrollPanel;
 	
+	private JMenu connectToConcierge;
 	
+	public JMenu getConnectToConcierge() {
+		return connectToConcierge;
+	}
+
+	public void setConnectToConcierge(JMenu connectToConcierge) {
+		this.connectToConcierge = connectToConcierge;
+	}
+
 	public BavardFrame(Bavard bavard, String name) {
 
 		this.setTitle(name);
@@ -48,7 +60,10 @@ private static final long serialVersionUID = 1L;
 		this.addWindowListener(new WindowAdapter() {
 			@Override
 			public void windowClosed(WindowEvent windowEvent) {
-				EPapotage.getConciergeFrame().writeLogs(name + " has logged out");
+				
+				//TODO CHANGE
+				
+				//EPapotage.getConciergeFrame().writeLogs(name + " has logged out");
 		    }
 		});
 
@@ -74,6 +89,42 @@ private static final long serialVersionUID = 1L;
 	    this.writeAndSendPanel.setPreferredSize(new Dimension(10, 10));
 	    this.sendPanel = new JPanel();
 	    
+	    JMenuBar menuBar = new JMenuBar();
+		this.setJMenuBar(menuBar);
+		
+		JMenu mnBavard = new JMenu("Concierge");
+		menuBar.add(mnBavard);
+		
+		connectToConcierge = new JMenu("connectToConcierge");
+		mnBavard.add(connectToConcierge);
+		
+		
+		// Add all the available Concierges to him and then he will be able to select the bavard he wants to get
+		for (ConciergeFrame cf : EPapotage.getConciergeFrames()) {
+			JCheckBoxMenuItem jCheckBoxMenuItem = new JCheckBoxMenuItem(cf.getConcierge().getName());
+			connectToConcierge.add(jCheckBoxMenuItem);
+			jCheckBoxMenuItem.addActionListener(new ActionListener() {
+				
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					
+					if (jCheckBoxMenuItem.getState()) {
+						cf.getConcierge().addBavard(bavard);
+						
+						//concierge.addListBavardConnected(bavard);
+						//bavard.addConcierge(concierge);
+					}
+					else {
+						cf.getConcierge().removeBavard(bavard);
+						
+						//concierge.removeListBavardConnected(bavard);
+						//bavard.removeConcierge(concierge);
+					}
+				}
+			});
+			
+		}
+		
 	    this.bavard = bavard;
 	   	            
         writeAndSendPanel.setLayout(new BoxLayout(writeAndSendPanel, BoxLayout.Y_AXIS));
@@ -101,6 +152,9 @@ private static final long serialVersionUID = 1L;
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
+				
+				/*
+				
 				if (chatWritter.getText().length() >= 2 && EPapotage.getCurrentBavard() != null) {					
 					for (BavardFrame bf : EPapotage.getBavardFrames()) {
 						bf.sendMessage(name, chatWritter.getText());
@@ -110,7 +164,40 @@ private static final long serialVersionUID = 1L;
 					EPapotage.getConciergeFrame().writeLogs(name + ": " + chatWritter.getText());
 					
 					chatWritter.setText("");
-				}				
+				}
+				
+				*/
+				
+				//TODO PROBLEME HERE
+				
+				if (!chatWritter.getText().isEmpty()) {
+					
+					
+					
+					
+					
+					
+					for (ConciergeFrame cf : EPapotage.getConciergeFrames()) {
+						
+						cf.getConcierge().dispatchMessageBetweenBavards(name, chatWritter.getText());
+						
+						/*
+						
+						if (cf.getConcierge().getListBarvardConnected().contains(bavard)) {
+							sendMessage(name, chatWritter.getText());
+							
+							cf.writeLogs(name + ": " + chatWritter.getText());
+						}
+						
+						*/
+					}
+					
+					//Write the logs
+					//EPapotage.getConciergeFrame().writeLogs(name + ": " + chatWritter.getText());
+					
+					chatWritter.setText("");
+				}
+				
 			}
 		});		
 	    
