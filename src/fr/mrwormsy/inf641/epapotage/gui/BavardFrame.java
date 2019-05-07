@@ -20,8 +20,9 @@ import javax.swing.JTextField;
 
 import fr.mrwormsy.inf641.epapotage.Bavard;
 import fr.mrwormsy.inf641.epapotage.EPapotage;
+import fr.mrwormsy.inf641.epapotage.PapotageListener;
 
-public class BavardFrame extends JFrame {
+public class BavardFrame extends JFrame implements PapotageListener {
 
 	
 private static final long serialVersionUID = 1L;
@@ -43,6 +44,8 @@ private static final long serialVersionUID = 1L;
 	
 	private JMenu connectToConcierge;
 	
+	private BavardFrame bavarFrame;
+	
 	public JMenu getConnectToConcierge() {
 		return connectToConcierge;
 	}
@@ -53,6 +56,8 @@ private static final long serialVersionUID = 1L;
 
 	public BavardFrame(Bavard bavard, String name) {
 
+		bavarFrame = this;
+		
 		this.setTitle(name);
 		this.setSize(600, 400);
 		this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -61,9 +66,12 @@ private static final long serialVersionUID = 1L;
 			@Override
 			public void windowClosed(WindowEvent windowEvent) {
 				
-				//TODO CHANGE
-				
-				//EPapotage.getConciergeFrame().writeLogs(name + " has logged out");
+				for (ConciergeFrame cf : EPapotage.getConciergeFrames()) {
+					
+					if (cf.getConcierge().getListeners().contains(bavarFrame)) {
+						cf.writeLogs(name + " logged out");
+					}
+				}
 		    }
 		});
 
@@ -77,7 +85,6 @@ private static final long serialVersionUID = 1L;
 	    
 	    displayScrollPanel = new JScrollPane (this.chatDisplay, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
         this.displayScrollPanel.setPreferredSize(new Dimension(594, 321));
-        //this.chatDisplay.setMaximumSize(new Dimension(594, 300));
 	    
 	    this.chatWritter = new JTextField("Message");
 	    this.chatWritter.setBounds(25, 370, 475, 20);
@@ -103,22 +110,23 @@ private static final long serialVersionUID = 1L;
 		for (ConciergeFrame cf : EPapotage.getConciergeFrames()) {
 			JCheckBoxMenuItem jCheckBoxMenuItem = new JCheckBoxMenuItem(cf.getConcierge().getName());
 			connectToConcierge.add(jCheckBoxMenuItem);
+			
 			jCheckBoxMenuItem.addActionListener(new ActionListener() {
 				
 				@Override
 				public void actionPerformed(ActionEvent e) {
 					
 					if (jCheckBoxMenuItem.getState()) {
-						cf.getConcierge().addBavard(bavard);
+						cf.getConcierge().addListener(bavard);
+						cf.getConcierge().addListener(bavarFrame);
 						
-						//concierge.addListBavardConnected(bavard);
-						//bavard.addConcierge(concierge);
-					}
-					else {
-						cf.getConcierge().removeBavard(bavard);
+						cf.writeLogs(name + " is now following you");
 						
-						//concierge.removeListBavardConnected(bavard);
-						//bavard.removeConcierge(concierge);
+					} else {
+						cf.getConcierge().removeListener(bavard);
+						cf.getConcierge().removeListener(bavarFrame);
+						
+						cf.writeLogs(name + " is no longer following you");
 					}
 				}
 			});
@@ -151,49 +159,16 @@ private static final long serialVersionUID = 1L;
 	    this.sendMessageButton.addActionListener(new ActionListener() {
 			
 			@Override
-			public void actionPerformed(ActionEvent e) {
-				
-				/*
-				
-				if (chatWritter.getText().length() >= 2 && EPapotage.getCurrentBavard() != null) {					
-					for (BavardFrame bf : EPapotage.getBavardFrames()) {
-						bf.sendMessage(name, chatWritter.getText());
-					}
-					
-					//Write the logs
-					EPapotage.getConciergeFrame().writeLogs(name + ": " + chatWritter.getText());
-					
-					chatWritter.setText("");
-				}
-				
-				*/
-				
-				//TODO PROBLEME HERE
-				
+			public void actionPerformed(ActionEvent e) {				
 				if (!chatWritter.getText().isEmpty()) {
-					
-					
-					
-					
-					
 					
 					for (ConciergeFrame cf : EPapotage.getConciergeFrames()) {
 						
-						cf.getConcierge().dispatchMessageBetweenBavards(name, chatWritter.getText());
-						
-						/*
-						
-						if (cf.getConcierge().getListBarvardConnected().contains(bavard)) {
-							sendMessage(name, chatWritter.getText());
-							
+						if (cf.getConcierge().getListeners().contains(bavarFrame)) {
+							cf.getConcierge().sendMessageToAllListeners(name, chatWritter.getText());
 							cf.writeLogs(name + ": " + chatWritter.getText());
 						}
-						
-						*/
 					}
-					
-					//Write the logs
-					//EPapotage.getConciergeFrame().writeLogs(name + ": " + chatWritter.getText());
 					
 					chatWritter.setText("");
 				}
@@ -217,8 +192,7 @@ private static final long serialVersionUID = 1L;
 	    return "<html>" + orig.replaceAll("\n", "<br>") + "</html>";
 	}
 	
-	public void sendMessage(String name, String text) {
-		//this.chatDisplay.setText(convertToMultiline(this.chatDisplay.getText().replaceAll("(<html>)", "").replaceAll("(</html>)", "") + "\n" + name + " wrote : " + text));		
+	public void sendMessage(String name, String text) {		
 		this.chatDisplay.setText(this.chatDisplay.getText() + "\n" + name + ": " + text);
 	}
 
@@ -236,6 +210,5 @@ private static final long serialVersionUID = 1L;
 
 	public void setPassword(String password) {
 		this.password = password;
-	}
-	
+	}	
 }

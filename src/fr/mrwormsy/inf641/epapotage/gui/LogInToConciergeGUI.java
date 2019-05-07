@@ -90,6 +90,12 @@ public class LogInToConciergeGUI {
 				
 				// We get the name and if the Concierge already exists we log him in, otherwise we deny him.
 				if (EPapotage.conciergeExists(usernameInput.getText())) {
+						
+					//Check if the COncierge is already logged in
+					if (EPapotage.getConciergeFrameFromName(usernameInput.getText()).isVisible()) {
+						JOptionPane.showMessageDialog(frame, "This concierge is already logged in");
+						return;
+					}
 					
 					// Check if the password entered matchs to the Bavard password
 					if (DigestUtils.md5Hex(passInput.getText()).equalsIgnoreCase(EPapotage.getConciergeFrameFromName(usernameInput.getText()).getPassword())) {

@@ -95,19 +95,21 @@ public class LogInToBavardGUI {
 					// Check if the password entered matchs to the Bavard password
 					if (DigestUtils.md5Hex(passInput.getText()).equalsIgnoreCase(EPapotage.getBavardFrameFromName(usernameInput.getText()).getPassword())) {
 						
+						//Check if the COncierge is already logged in
+						if (EPapotage.getBavardFrameFromName(usernameInput.getText()).isVisible()) {
+							JOptionPane.showMessageDialog(frame, "This bavard is already logged in");
+							return;
+						}
 						
 						//Display the bavard frame
 						EPapotage.getBavardFrameFromName(usernameInput.getText()).setVisible(true);;
 									
-						/*
-						
-						for (BavardFrame bf : EPapotage.getBavardsFrames()) {
-							bf.bavardConnection(usernameInput.getText());
+						for (ConciergeFrame cf : EPapotage.getConciergeFrames()) {
+							
+							if (cf.getConcierge().getListeners().contains(EPapotage.getBavardFrameFromName(usernameInput.getText()))) {
+								cf.writeLogs(usernameInput.getText() + " logged in");
+							}
 						}
-						
-						*/
-						
-						//EPapotage.getConciergeFrame().writeLogs(usernameInput.getText() + " logged in");
 						
 						frame.dispose();
 					} else {

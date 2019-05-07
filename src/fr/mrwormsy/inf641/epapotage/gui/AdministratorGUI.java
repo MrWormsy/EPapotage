@@ -27,6 +27,7 @@ public class AdministratorGUI extends JFrame {
 		this.setTitle("Administrator GUI");
 		this.setBounds(100, 100, 550, 440);
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		this.setResizable(false);
 		
 		JLabel welcomeLabel = new JLabel("Welcome to EPapotage");
 		welcomeLabel.setHorizontalAlignment(SwingConstants.CENTER);

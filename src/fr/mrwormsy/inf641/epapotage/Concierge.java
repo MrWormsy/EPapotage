@@ -4,30 +4,12 @@ import java.util.ArrayList;
 public class Concierge {
 	private int id_C;
 	private String name;
-	private ArrayList<Bavard> listBarvardConnected;
-	private ArrayList<String> messages;
+	private ArrayList<PapotageListener> listeners;
 	
 	public Concierge (String name) {
 		this.id_C = 0;
-		this.listBarvardConnected = new ArrayList<Bavard>();
-		this.messages = new ArrayList<String>();
+		this.setListeners(new ArrayList<PapotageListener>());
 		this.name = name;
-	}
-	
-	public ArrayList<Bavard> getListBarvardConnected() {
-		return listBarvardConnected;
-	}
-
-	public void setListBarvardConnected(ArrayList<Bavard> listBarvardConnected) {
-		this.listBarvardConnected = listBarvardConnected;
-	}
-
-	public ArrayList<String> getMessages() {
-		return messages;
-	}
-
-	public void setMessages(ArrayList<String> messages) {
-		this.messages = messages;
 	}
 
 	public void setId_C(int id_C) {
@@ -38,23 +20,17 @@ public class Concierge {
 		return id_C;
 	}
 	
-	public void addBavard(Bavard barvard) {
-		listBarvardConnected.add(barvard);
+	public void addListener(PapotageListener listener) {
+		listeners.add(listener);
 	}
 	
-	public void removeBavard(Bavard barvard) {
-		listBarvardConnected.remove(barvard);
+	public void removeListener(PapotageListener listener) {
+		listeners.remove(listener);
 	}
 	
-	public void bavardConnecte() {
-		for (Bavard bv : listBarvardConnected) {
-			System.out.println("Le bavard " + bv.getName() + " est connecté");
-		}
-	}
-
-	public void dispatchMessageBetweenBavards(String name, String text) {
-		for(Bavard bv : this.listBarvardConnected) {
-			bv.sendMessage(name, text);
+	public void listenersConnected() {
+		for (PapotageListener l : listeners) {
+			System.out.println(getName() + " said that the listener " + l.getName() + " is connected");
 		}
 	}
 
@@ -64,5 +40,20 @@ public class Concierge {
 
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	public ArrayList<PapotageListener> getListeners() {
+		return listeners;
+	}
+
+	public void setListeners(ArrayList<PapotageListener> listeners) {
+		this.listeners = listeners;
+	}
+
+	public void sendMessageToAllListeners(String name, String text) {
+		for (PapotageListener listener : listeners) {
+			listener.sendMessage(name, text);
+		}
+		
 	}
 }

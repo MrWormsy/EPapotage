@@ -134,26 +134,34 @@ public class CreateConciergeGUI {
 						
 						//Add this ConciergeFrame to all the BavardFrames that exist
 						for (BavardFrame bf : EPapotage.getBavardFrames()) {
-							bf.getConnectToConcierge().add(new JCheckBoxMenuItem(concierge.getName()));
+							
+							JCheckBoxMenuItem jCheckBoxMenuItem = new JCheckBoxMenuItem(concierge.getName());
+							
+							bf.getConnectToConcierge().add(jCheckBoxMenuItem);
+							
+							jCheckBoxMenuItem.addActionListener(new ActionListener() {
+								
+								@Override
+								public void actionPerformed(ActionEvent e) {
+									
+									if (jCheckBoxMenuItem.getState()) {
+										concierge.addListener(bf.getBavard());
+										concierge.addListener(bf);
+										
+										conciergeFrame.writeLogs(bf.getBavard().getName() + " is now following you");
+										
+									} else {
+										concierge.removeListener(bf.getBavard());
+										concierge.removeListener(bf);
+										
+										conciergeFrame.writeLogs(bf.getBavard().getName() + " is no longer following you");
+									}
+								}
+							});
+							
+							
 						}
-						
-						
-						
-						/*
-						
-						Bavard barvard = new Bavard(usernameInput.getText());
-						
-						EPapotage.addBavard(barvard);
-						EPapotage.addBavardFrame(new BavardFrame(usernameInput.getText()));
-						
-						EPapotage.getConcierge().addBavard(barvard);
-						
-						EPapotage.getConciergeFrame().writeLogs(usernameInput.getText() + " has been registered as a new Bavard");
-						
-						EPapotage.getBavardFrameFromName(usernameInput.getText()).setPassword(md5HexPass);
-						
-						*/
-						
+												
 						frame.dispose();
 					} else {
 						JOptionPane.showMessageDialog(frame, "The passwords do not match !");
