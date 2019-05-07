@@ -9,6 +9,7 @@ import javax.swing.JButton;
 import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
@@ -158,9 +159,40 @@ public class CreateConciergeGUI {
 									}
 								}
 							});
-							
-							
 						}
+						
+						// We need to add this JMenuItem to the list ConciergeFrame to delete of the AdministratorGUI
+						JMenuItem conciergeToDelete = new JMenuItem(concierge.getName());
+						EPapotage.getAdministratorGUI().getConciergeDelete().add(conciergeToDelete);
+						
+						//Add to the JMenuItem list of the Admnistrator GUI
+						JMenuItem conciergeList = new JMenuItem(concierge.getName());
+						EPapotage.getAdministratorGUI().getConciergelist().add(conciergeList);
+						
+						//Then add the fact that if the Administrator clicks on this JMenuItem we delete the ConciergeFrame
+						conciergeToDelete.addActionListener(new ActionListener() {
+							
+							@Override
+							public void actionPerformed(ActionEvent e) {
+								
+								//Remove every JMenuItems related to this Concierge
+								for (BavardFrame bf : EPapotage.getBavardFrames()) {
+									bf.getConnectToConcierge().remove(bf.getComponentByName(concierge.getName()));
+								}
+								
+								//Remove this Concierge from the list JMenu and the delete menu
+								EPapotage.getAdministratorGUI().getConciergeDelete().remove(conciergeToDelete);
+								EPapotage.getAdministratorGUI().getConciergelist().remove(conciergeList);
+								
+								//Close its window
+								if (EPapotage.getConciergeFrameFromName(concierge.getName()).isVisible()) {
+									EPapotage.getConciergeFrameFromName(concierge.getName()).setVisible(false);
+								}
+								
+								//And them remove the frame
+								EPapotage.getConciergeFrames().remove(EPapotage.getConciergeFrameFromName(concierge.getName()));
+							}
+						});
 												
 						frame.dispose();
 					} else {

@@ -20,6 +20,11 @@ public class AdministratorGUI extends JFrame {
 	
 	
 	private static final long serialVersionUID = 1L;
+	
+	private JMenu bavardDelete;
+	private JMenu bavardlist;
+	private JMenu conciergeDelete;
+	private JMenu conciergelist;
 
 	public AdministratorGUI() {
 		
@@ -83,11 +88,11 @@ public class AdministratorGUI extends JFrame {
 		JMenuItem conciergeAdd = new JMenuItem("Add");
 		conciergesMenu.add(conciergeAdd);
 		
-		JMenuItem conciergeDelete = new JMenuItem("Delete");
+		conciergeDelete = new JMenu("Delete");
 		conciergesMenu.add(conciergeDelete);
 		
-		JMenuItem conciergeList = new JMenuItem("List");
-		conciergesMenu.add(conciergeList);
+		conciergelist = new JMenu("List");
+		conciergesMenu.add(conciergelist);
 		
 		JMenuItem conciergeLogin = new JMenuItem("Log In");
 		conciergesMenu.add(conciergeLogin);
@@ -98,11 +103,11 @@ public class AdministratorGUI extends JFrame {
 		JMenuItem bavardAdd = new JMenuItem("Add");
 		bavardMenu.add(bavardAdd);
 		
-		JMenuItem bavardDelete = new JMenuItem("Delete");
+		bavardDelete = new JMenu("Delete");
 		bavardMenu.add(bavardDelete);
 		
-		JMenuItem bavardList = new JMenuItem("List");
-		bavardMenu.add(bavardList);
+		bavardlist = new JMenu("List");
+		bavardMenu.add(bavardlist);
 		
 		JMenuItem bavardLogin = new JMenuItem("Log In");
 		bavardMenu.add(bavardLogin);
@@ -156,7 +161,38 @@ public class AdministratorGUI extends JFrame {
 		});
 		
 		
-		
 		this.setVisible(true);
 	}	
+	
+	public JMenuItem getBavardDelete() {
+		return bavardDelete;
+	}
+
+	public void setBavardDelete(JMenu bavardDelete) {
+		this.bavardDelete = bavardDelete;
+	}
+
+	public JMenu getConciergeDelete() {
+		return conciergeDelete;
+	}
+
+	public void setConciergeDelete(JMenu conciergeDelete) {
+		this.conciergeDelete = conciergeDelete;
+	}
+	
+	public JMenu getBavardlist() {
+		return bavardlist;
+	}
+
+	public void setBavardlist(JMenu bavardlist) {
+		this.bavardlist = bavardlist;
+	}
+
+	public JMenu getConciergelist() {
+		return conciergelist;
+	}
+
+	public void setConciergelist(JMenu conciergelist) {
+		this.conciergelist = conciergelist;
+	}
 }

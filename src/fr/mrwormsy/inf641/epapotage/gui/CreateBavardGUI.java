@@ -8,6 +8,7 @@ import javax.swing.GroupLayout.Alignment;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
@@ -129,20 +130,41 @@ public class CreateBavardGUI {
 						//Set the BavardFrame password
 						bavardFrame.setPassword(md5HexPass);
 						
-						/*
+						//Administration part
 						
-						Bavard barvard = new Bavard(usernameInput.getText());
+						// We need to add this JMenuItem to the list of BavardFrame to delete of the AdministratorGUI
+						JMenuItem bavardToDelete = new JMenuItem(bavard.getName());
+						EPapotage.getAdministratorGUI().getBavardDelete().add(bavardToDelete);
 						
-						EPapotage.addBavard(barvard);
-						EPapotage.addBavardFrame(new BavardFrame(usernameInput.getText()));
+						//Add to the JMenuItem list of the Admnistrator GUI
+						JMenuItem bavardList = new JMenuItem(bavard.getName());
+						EPapotage.getAdministratorGUI().getBavardlist().add(bavardList);
 						
-						EPapotage.getConcierge().addBavard(barvard);
-						
-						EPapotage.getConciergeFrame().writeLogs(usernameInput.getText() + " has been registered as a new Bavard");
-						
-						EPapotage.getBavardFrameFromName(usernameInput.getText()).setPassword(md5HexPass);
-						
-						*/
+						//Then add the fact that if the Administrator clicks on this JMenuItem we delete the BavardFrame
+						bavardToDelete.addActionListener(new ActionListener() {
+							
+							@Override
+							public void actionPerformed(ActionEvent e) {
+								
+								//Remove this Bavard from every Concierges
+								for(ConciergeFrame cf : EPapotage.getConciergeFrames()) {
+									cf.getConcierge().removeListener(bavard);
+									cf.getConcierge().removeListener(bavardFrame);
+								}
+								
+								//Remove this Concierge from the list JMenu and the delete menu
+								EPapotage.getAdministratorGUI().getBavardDelete().remove(bavardToDelete);
+								EPapotage.getAdministratorGUI().getBavardlist().remove(bavardList);
+								
+								//Close its window
+								if (EPapotage.getBavardFrameFromName(bavard.getName()).isVisible()) {
+									EPapotage.getBavardFrameFromName(bavard.getName()).setVisible(false);
+								}
+								
+								//And them remove the frame
+								EPapotage.getBavardFrames().remove(EPapotage.getBavardFrameFromName(bavard.getName()));
+							}
+						});
 						
 						frame.dispose();
 					} else {
