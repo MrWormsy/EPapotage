@@ -13,6 +13,9 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.LayoutStyle.ComponentPlacement;
+
+import fr.mrwormsy.inf641.epapotage.EPapotage;
+
 import javax.swing.SwingConstants;
 
 public class AdministratorGUI extends JFrame {
@@ -39,12 +42,12 @@ public class AdministratorGUI extends JFrame {
 		
 		JPanel logoPanel = new JPanel();
 
-		JLabel imgLabel = new JLabel(new ImageIcon("logo.png"));
+		JLabel imgLabel = new JLabel(new ImageIcon(EPapotage.class.getResource("/resources/logo.png")));
 		logoPanel.add(imgLabel);
 		
 		
 		JPanel polytechPanel = new JPanel();
-		JLabel imgLabel2 = new JLabel(new ImageIcon("polytech.png"));
+		JLabel imgLabel2 = new JLabel(new ImageIcon(EPapotage.class.getResource("/resources/polytech.png")));
 		polytechPanel.add(imgLabel2);
 		
 		JLabel creditsPanel = new JLabel("By HENAFF Th\u00E9o & ROSA--MARTIN Antonin");
