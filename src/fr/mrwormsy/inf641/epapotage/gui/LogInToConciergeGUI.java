@@ -16,7 +16,7 @@ import org.apache.commons.codec.digest.DigestUtils;
 
 import fr.mrwormsy.inf641.epapotage.EPapotage;
 
-public class LogInToBavardGUI {
+public class LogInToConciergeGUI {
 
 	private JFrame frame;
 	private JTextField usernameInput;
@@ -24,10 +24,10 @@ public class LogInToBavardGUI {
 	private JLabel usernameLabel;
 	private JLabel passLabel;
 
-	// The Gui is used to log the Bavard to his BavardFrame
-	public LogInToBavardGUI() {
+	// The Gui is used to log the Concierge to his ConciergeFrame
+	public LogInToConciergeGUI() {
 
-		frame = new JFrame("Log in to Bavard");
+		frame = new JFrame("Log in to Concierge");
 		frame.setBounds(100, 100, 300, 185);
 		frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
@@ -69,6 +69,7 @@ public class LogInToBavardGUI {
 						passInput, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
 				.addGap(18).addComponent(logInButton).addContainerGap(85, Short.MAX_VALUE)));
 		frame.getContentPane().setLayout(groupLayout);
+
 		frame.getRootPane().setDefaultButton(logInButton);
 
 		// We add the listener to the log in button
@@ -78,41 +79,31 @@ public class LogInToBavardGUI {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 
-				// We get the name and if the Bavard already exists we log to him, otherwise we
-				// deny the log in
-				if (EPapotage.bavardExists(usernameInput.getText())) {
+				// We get the name and if the Concierge already exists we log him in, otherwise
+				// we deny him.
+				if (EPapotage.conciergeExists(usernameInput.getText())) {
+
+					// Check if the Concierge is already logged in (that is to say if the window is
+					// already visible)
+					if (EPapotage.getConciergeFrameFromName(usernameInput.getText()).isVisible()) {
+						JOptionPane.showMessageDialog(frame, "This concierge is already logged in");
+						return;
+					}
 
 					// Check if the password entered matchs to the Bavard password (with the md5
 					// encryption)
 					if (DigestUtils.md5Hex(passInput.getText()).equalsIgnoreCase(
-							EPapotage.getBavardFrameFromName(usernameInput.getText()).getPassword())) {
+							EPapotage.getConciergeFrameFromName(usernameInput.getText()).getPassword())) {
 
-						// Check if the Bavard is already logged in (that is to say if the window is
-						// already visible)
-						if (EPapotage.getBavardFrameFromName(usernameInput.getText()).isVisible()) {
-							JOptionPane.showMessageDialog(frame, "This bavard is already logged in");
-							return;
-						}
-
-						// Display the BavardFrame
-						EPapotage.getBavardFrameFromName(usernameInput.getText()).setVisible(true);
+						// We display the frame
+						EPapotage.getConciergeFrameFromName(usernameInput.getText()).setVisible(true);
 						;
-
-						// Warn the Concierges this Bavard is connected to that he has logged in
-						for (ConciergeFrame cf : EPapotage.getConciergeFrames()) {
-
-							if (cf.getConcierge().getListeners()
-									.contains(EPapotage.getBavardFrameFromName(usernameInput.getText()))) {
-								cf.writeLogs(usernameInput.getText() + " logged in");
-							}
-						}
-
 						frame.dispose();
 					} else {
 						JOptionPane.showMessageDialog(frame, "Your password is incorect !");
 					}
 				} else {
-					JOptionPane.showMessageDialog(frame, "This bavard does not exist !");
+					JOptionPane.showMessageDialog(frame, "This concierge does not exist !");
 				}
 
 			}
@@ -120,4 +111,5 @@ public class LogInToBavardGUI {
 
 		frame.setVisible(true);
 	}
+
 }

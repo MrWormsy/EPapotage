@@ -6,6 +6,7 @@ import java.awt.event.ActionListener;
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
 import javax.swing.JButton;
+import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JMenuItem;
@@ -15,10 +16,10 @@ import javax.swing.JTextField;
 
 import org.apache.commons.codec.digest.DigestUtils;
 
-import fr.mrwormsy.inf641.epapotage.Bavard;
+import fr.mrwormsy.inf641.epapotage.Concierge;
 import fr.mrwormsy.inf641.epapotage.EPapotage;
 
-public class CreateBavardGUI {
+public class CreateConciergeGUI {
 
 	// Variables
 	private JFrame frame;
@@ -29,12 +30,12 @@ public class CreateBavardGUI {
 	private JLabel passLabel;
 	private JLabel confirmLabel;
 
-	// This Gui is used to create a new Bavard with a username and two fields for
+	// This Gui is used to create a new Concierge with a username and two fields for
 	// the password
-	public CreateBavardGUI() {
+	public CreateConciergeGUI() {
 
-		frame = new JFrame("Create Bavard");
-		frame.setBounds(100, 100, 300, 250);
+		frame = new JFrame("Create Concierge");
+		frame.setBounds(100, 100, 350, 250);
 		frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
 		usernameLabel = new JLabel("Username");
@@ -54,7 +55,7 @@ public class CreateBavardGUI {
 
 		// The group layout
 
-		JButton registerButton = new JButton("Register Bavard");
+		JButton registerButton = new JButton("Register Concierge");
 		GroupLayout groupLayout = new GroupLayout(frame.getContentPane());
 		groupLayout.setHorizontalGroup(groupLayout.createParallelGroup(Alignment.LEADING)
 				.addGroup(groupLayout.createSequentialGroup().addGap(26)
@@ -80,7 +81,6 @@ public class CreateBavardGUI {
 				.addGap(32).addComponent(registerButton).addContainerGap(33, Short.MAX_VALUE)));
 
 		frame.getContentPane().setLayout(groupLayout);
-
 		frame.setVisible(true);
 
 		// We add an ActionListener when the register button is clicked
@@ -101,8 +101,8 @@ public class CreateBavardGUI {
 					return;
 				}
 
-				// We check that the Barvard does not exist yet
-				if (!EPapotage.bavardExists(usernameInput.getText())) {
+				// We check that the Concierge does not exist yet
+				if (!EPapotage.conciergeExists(usernameInput.getText())) {
 
 					// Check if the two passwords are the same (we are using md5 as the encryption
 					// method)
@@ -110,55 +110,88 @@ public class CreateBavardGUI {
 					String md5HexConfirm = DigestUtils.md5Hex(confirmInput.getText());
 
 					if (md5HexConfirm.equals(md5HexPass)) {
-						// We create a Bavard and we add it to the list of Bavard in EPapotage
+						// We create a Concierge and we add it to the list of Concierge in EPapotage
 
-						// First we create a new Bavard
-						Bavard bavard = new Bavard(usernameInput.getText());
+						// First we create a new Concierge
+						Concierge concierge = new Concierge(usernameInput.getText());
 
-						// We add this Bavard to a new BavardFrame
-						BavardFrame bavardFrame = new BavardFrame(bavard, usernameInput.getText());
+						// We add this Concierge to a new ConciergeFrame
+						ConciergeFrame conciergeFrame = new ConciergeFrame(concierge);
 
-						// We add this BavardFrame to the list of BavardFrame of the Administrator
-						EPapotage.getBavardFrames().add(bavardFrame);
+						// We add this ConciergeFrame to the list of ConciergeFrame of the Administrator
+						EPapotage.getConciergeFrames().add(conciergeFrame);
 
-						// Set the BavardFrame password
-						bavardFrame.setPassword(md5HexPass);
+						// Set the ConciergeFrame password
+						conciergeFrame.setPassword(md5HexPass);
 
-						// Administration part
+						// Add this ConciergeFrame to all the BavardFrames that exist
+						for (BavardFrame bf : EPapotage.getBavardFrames()) {
 
-						// We need to add this JMenuItem to the list of BavardFrame to delete of the
+							JCheckBoxMenuItem jCheckBoxMenuItem = new JCheckBoxMenuItem(concierge.getName());
+
+							bf.getConnectToConcierge().add(jCheckBoxMenuItem);
+
+							// Set the checkbow to either follow or unfollow a Concierge
+							jCheckBoxMenuItem.addActionListener(new ActionListener() {
+
+								@Override
+								public void actionPerformed(ActionEvent e) {
+
+									// If this is clicked we follow the Concierge
+									if (jCheckBoxMenuItem.getState()) {
+										concierge.addListener(bf.getBavard());
+										concierge.addListener(bf);
+
+										conciergeFrame.writeLogs(bf.getBavard().getName() + " is now following you");
+
+									}
+
+									// Else we unfollow
+									else {
+										concierge.removeListener(bf.getBavard());
+										concierge.removeListener(bf);
+
+										conciergeFrame
+												.writeLogs(bf.getBavard().getName() + " is no longer following you");
+									}
+								}
+							});
+						}
+
+						// We need to add this JMenuItem to the list ConciergeFrame to delete of the
 						// AdministratorGUI
-						JMenuItem bavardToDelete = new JMenuItem(bavard.getName());
-						EPapotage.getAdministratorGUI().getBavardDelete().add(bavardToDelete);
+						JMenuItem conciergeToDelete = new JMenuItem(concierge.getName());
+						EPapotage.getAdministratorGUI().getConciergeDelete().add(conciergeToDelete);
 
 						// Add to the JMenuItem list of the Admnistrator GUI
-						JMenuItem bavardList = new JMenuItem(bavard.getName());
-						EPapotage.getAdministratorGUI().getBavardlist().add(bavardList);
+						JMenuItem conciergeList = new JMenuItem(concierge.getName());
+						EPapotage.getAdministratorGUI().getConciergelist().add(conciergeList);
 
 						// Then add the fact that if the Administrator clicks on this JMenuItem we
-						// delete the BavardFrame
-						bavardToDelete.addActionListener(new ActionListener() {
+						// delete the ConciergeFrame
+						conciergeToDelete.addActionListener(new ActionListener() {
 
 							@Override
 							public void actionPerformed(ActionEvent e) {
 
-								// Remove this Bavard from every Concierges
-								for (ConciergeFrame cf : EPapotage.getConciergeFrames()) {
-									cf.getConcierge().removeListener(bavard);
-									cf.getConcierge().removeListener(bavardFrame);
+								// Remove every JMenuItems related to this Concierge
+								for (BavardFrame bf : EPapotage.getBavardFrames()) {
+									bf.getConnectToConcierge()
+											.remove(bf.getjCheckBoxMenuItemByName(concierge.getName()));
 								}
 
 								// Remove this Concierge from the list JMenu and the delete menu
-								EPapotage.getAdministratorGUI().getBavardDelete().remove(bavardToDelete);
-								EPapotage.getAdministratorGUI().getBavardlist().remove(bavardList);
+								EPapotage.getAdministratorGUI().getConciergeDelete().remove(conciergeToDelete);
+								EPapotage.getAdministratorGUI().getConciergelist().remove(conciergeList);
 
 								// Close its window
-								if (EPapotage.getBavardFrameFromName(bavard.getName()).isVisible()) {
-									EPapotage.getBavardFrameFromName(bavard.getName()).setVisible(false);
+								if (EPapotage.getConciergeFrameFromName(concierge.getName()).isVisible()) {
+									EPapotage.getConciergeFrameFromName(concierge.getName()).setVisible(false);
 								}
 
 								// And them remove the frame
-								EPapotage.getBavardFrames().remove(EPapotage.getBavardFrameFromName(bavard.getName()));
+								EPapotage.getConciergeFrames()
+										.remove(EPapotage.getConciergeFrameFromName(concierge.getName()));
 							}
 						});
 
@@ -167,12 +200,12 @@ public class CreateBavardGUI {
 						JOptionPane.showMessageDialog(frame, "The passwords do not match !");
 					}
 				} else {
-					JOptionPane.showMessageDialog(frame, "This bavard already exists !");
+					JOptionPane.showMessageDialog(frame, "This concierge already exists !");
 				}
 			}
 		});
 
-		// Set the default button
+		// We set the default button
 		frame.getRootPane().setDefaultButton(registerButton);
 	}
 }

@@ -2,96 +2,91 @@ package fr.mrwormsy.inf641.epapotage;
 
 import java.util.ArrayList;
 
+import fr.mrwormsy.inf641.epapotage.gui.AdministratorGUI;
 import fr.mrwormsy.inf641.epapotage.gui.BavardFrame;
-import fr.mrwormsy.inf641.epapotage.gui.Gui;
+import fr.mrwormsy.inf641.epapotage.gui.ConciergeFrame;
 
 public class EPapotage {
 
-	private static ArrayList<Bavard> bavards;
-	private static ArrayList<BavardFrame> bavardsFrames;
-	private static Bavard currentBavard;
+	//The admin GUI which is the first menu we encounter
+	private static AdministratorGUI administratorGUI;
 	
-	private static Concierge concierge;
-	
+	//A list of BavardFrame
+	private static ArrayList<BavardFrame> bavardFrames;
+
+	//A list of ConciergeFrame
+	private static ArrayList<ConciergeFrame> conciergeFrames;
+
+	//The main method
 	public static void main(String[] args) {
-		
-		setBavards(new ArrayList<Bavard>());
-		setBavardsFrames(new ArrayList<BavardFrame>());
-		
-		setCurrentBavard(null);
-		
-		setConcierge(new Concierge());	
-		
-		getConcierge().setGui(new Gui());
+
+		//We initialize an empty set of ConciergeFrame and BavardFrame
+		setConciergeFrames(new ArrayList<ConciergeFrame>());
+		setBavardFrames(new ArrayList<BavardFrame>());
+
+		//We create the administrator menu
+		setAdministratorGUI(new AdministratorGUI());
 	}
 
-	public static void addBavard(Bavard bavard) {
-		bavards.add(bavard);
-	}
-
-	public static ArrayList<Bavard> getBavards() {
-		return bavards;
-	}
-
-	public static void setBavards(ArrayList<Bavard> bavards) {
-		EPapotage.bavards = bavards;
-	}
+	//Getter, Setter and several method to get objects with their (unique) name
 	
+	public static AdministratorGUI getAdministratorGUI() {
+		return administratorGUI;
+	}
+
+	public static void setAdministratorGUI(AdministratorGUI administratorGUI) {
+		EPapotage.administratorGUI = administratorGUI;
+	}
+
+	public static ArrayList<BavardFrame> getBavardFrames() {
+		return bavardFrames;
+	}
+
+	public static void setBavardFrames(ArrayList<BavardFrame> bavardFrames) {
+		EPapotage.bavardFrames = bavardFrames;
+	}
+
+	public static ArrayList<ConciergeFrame> getConciergeFrames() {
+		return conciergeFrames;
+	}
+
+	public static void setConciergeFrames(ArrayList<ConciergeFrame> conciergeFrames) {
+		EPapotage.conciergeFrames = conciergeFrames;
+	}
+
 	public static boolean bavardExists(String bavard) {
-		for (Bavard b : bavards) {
-			if (b.getName().equalsIgnoreCase(bavard)) {
+		for (BavardFrame bf : getBavardFrames()) {
+			if (bf.getBavard().getName().equalsIgnoreCase(bavard)) {
 				return true;
 			}
 		}
-		
 		return false;
 	}
-	
-	public static Bavard getBavardFromName(String bavard) {
-		for (Bavard b : bavards) {
-			if (b.getName().equalsIgnoreCase(bavard)) {
-				return b;
+
+	public static boolean conciergeExists(String concierge) {
+		for (ConciergeFrame cf : getConciergeFrames()) {
+			if (cf.getConcierge().getName().equalsIgnoreCase(concierge)) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	public static BavardFrame getBavardFrameFromName(String bavard) {
+		for (BavardFrame bf : getBavardFrames()) {
+			if (bf.getBavard().getName().equalsIgnoreCase(bavard)) {
+				return bf;
 			}
 		}
 		return null;
 	}
 
-	public static Bavard getCurrentBavard() {
-		return currentBavard;
-	}
-
-	public static void setCurrentBavard(Bavard currentBavard) {
-		EPapotage.currentBavard = currentBavard;
-	}
-
-	public static Concierge getConcierge() {
-		return concierge;
-	}
-
-	public static void setConcierge(Concierge concierge) {
-		EPapotage.concierge = concierge;
-	}
-
-	public static ArrayList<BavardFrame> getBavardsFrames() {
-		return bavardsFrames;
-	}
-
-	public static void setBavardsFrames(ArrayList<BavardFrame> bavardsFrames) {
-		EPapotage.bavardsFrames = bavardsFrames;
-	}
-
-	public static void addBavardFrame(BavardFrame bavardFrame) {
-		bavardsFrames.add(bavardFrame);
-		
-	}
-
-	public static BavardFrame getBavardFrameFromName(String bavardFrameName) {
-		for (BavardFrame b : bavardsFrames) {
-			if (b.getBavard().getName().equalsIgnoreCase(bavardFrameName)) {
-				return b;
+	public static ConciergeFrame getConciergeFrameFromName(String bavard) {
+		for (ConciergeFrame cf : getConciergeFrames()) {
+			if (cf.getConcierge().getName().equalsIgnoreCase(bavard)) {
+				return cf;
 			}
 		}
 		return null;
-		
-	}	
+	}
 }
