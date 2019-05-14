@@ -23,51 +23,51 @@ import fr.mrwormsy.inf641.epapotage.Bavard;
 import fr.mrwormsy.inf641.epapotage.EPapotage;
 import fr.mrwormsy.inf641.epapotage.PapotageListener;
 
+//We are implementing PapotageListener, because we want to register it to a Concierge
 public class BavardFrame extends JFrame implements PapotageListener {
 
+	// This is not necessary because we don't want to serialize this class, but we
+	// let it not to get the warning
 	private static final long serialVersionUID = 1L;
 
-	private JPanel writeAndSendPanel;
+	// All the variables
 
+	private JPanel writeAndSendPanel;
 	private JTextArea chatDisplay;
 	private JTextField chatWritter;
-
 	private JButton sendMessageButton;
-
 	private JPanel sendPanel;
-
-	private Bavard bavard;
-
-	private String password;
-
 	private JScrollPane displayScrollPanel;
-
 	private JMenu connectToConcierge;
 
+	private Bavard bavard;
 	private BavardFrame bavarFrame;
 
-	public JMenu getConnectToConcierge() {
-		return connectToConcierge;
-	}
+	// The password which is hashed with md5
+	private String password;
 
-	public void setConnectToConcierge(JMenu connectToConcierge) {
-		this.connectToConcierge = connectToConcierge;
-	}
-
+	// The constructor needs a bavard and a name
 	public BavardFrame(Bavard bavard, String name) {
 
+		// This is used to get the instance of the object inside the Listeners
 		bavarFrame = this;
 
+		// Basic things
 		this.setTitle(name);
 		this.setSize(600, 400);
+		this.setLocationRelativeTo(null);
+		this.setResizable(false);
+
+		// We don't want the program to finish, just the window to close, this is why we
+		// are using DISPOSE_ON_CLOSE instead of EXIT_ON_CLOSE
 		this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
+		// If the person closes the window we inform the Concierges who are listening to
+		// the bavard, that his window has been closed
 		this.addWindowListener(new WindowAdapter() {
 			@Override
 			public void windowClosed(WindowEvent windowEvent) {
-
 				for (ConciergeFrame cf : EPapotage.getConciergeFrames()) {
-
 					if (cf.getConcierge().getListeners().contains(bavarFrame)) {
 						cf.writeLogs(name + " logged out");
 					}
@@ -75,10 +75,7 @@ public class BavardFrame extends JFrame implements PapotageListener {
 			}
 		});
 
-		this.setLocationRelativeTo(null);
-		this.setResizable(false);
-
-		// Content of the frame
+		// Content of the frame, no need to explain
 
 		this.chatDisplay = new JTextArea();
 		this.chatDisplay.setEditable(false);
@@ -107,16 +104,19 @@ public class BavardFrame extends JFrame implements PapotageListener {
 		mnBavard.add(connectToConcierge);
 
 		// Add all the available Concierges to him and then he will be able to select
-		// the bavard he wants to get
+		// the bavard he wants to get in touch with
 		for (ConciergeFrame cf : EPapotage.getConciergeFrames()) {
 			JCheckBoxMenuItem jCheckBoxMenuItem = new JCheckBoxMenuItem(cf.getConcierge().getName());
 			connectToConcierge.add(jCheckBoxMenuItem);
 
+			// We add an ActionListener to know if the Bavard wants to connect or to
+			// disconnect from the Concierge
 			jCheckBoxMenuItem.addActionListener(new ActionListener() {
 
 				@Override
 				public void actionPerformed(ActionEvent e) {
 
+					// Here we choose to connect or not
 					if (jCheckBoxMenuItem.getState()) {
 						cf.getConcierge().addListener(bavard);
 						cf.getConcierge().addListener(bavarFrame);
@@ -134,7 +134,11 @@ public class BavardFrame extends JFrame implements PapotageListener {
 
 		}
 
+		// Set set the Bavard of the BavardFrame
 		this.bavard = bavard;
+
+		// We are now using a GroupLayout which is pretty hard to explain and to deal
+		// with, but we finally succeed :D
 
 		writeAndSendPanel.setLayout(new BoxLayout(writeAndSendPanel, BoxLayout.Y_AXIS));
 		writeAndSendPanel.add(this.displayScrollPanel);
@@ -152,12 +156,18 @@ public class BavardFrame extends JFrame implements PapotageListener {
 
 		this.setContentPane(writeAndSendPanel);
 
+		// We add an ActionListener to the button used to send messages
 		this.sendMessageButton.addActionListener(new ActionListener() {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
+
+				// If the message contains something
 				if (!chatWritter.getText().isEmpty()) {
 
+					// We loop through all the Concierge and "tell" to the them which this bavard is
+					// connected to send message to their listeners and then write logs (to keep a
+					// trace)
 					for (ConciergeFrame cf : EPapotage.getConciergeFrames()) {
 
 						if (cf.getConcierge().getListeners().contains(bavarFrame)) {
@@ -166,15 +176,19 @@ public class BavardFrame extends JFrame implements PapotageListener {
 						}
 					}
 
+					// We reset the text of the chat writter
 					chatWritter.setText("");
 				}
 
 			}
 		});
 
+		// We set a default button, thanks to this we only need to press enter and the
+		// message will be sent
 		this.writeAndSendPanel.getRootPane().setDefaultButton(this.sendMessageButton);
 	}
 
+	// Notify the connection of a Bavard
 	public void bavardConnection(String name) {
 		if (this.chatDisplay.getText().isEmpty()) {
 			this.chatDisplay.setText("Hello " + name);
@@ -183,23 +197,95 @@ public class BavardFrame extends JFrame implements PapotageListener {
 		}
 
 	}
-	
-	public Component getComponentByName(String name) {
-		for(Component item : getConnectToConcierge().getComponents()) {
+
+	// Get the jCheckBoxMenuItem with a corresponding name (with is the name of a
+	// Concierge)
+	public Component getjCheckBoxMenuItemByName(String name) {
+		for (Component item : getConnectToConcierge().getComponents()) {
 			if (item.getName().equalsIgnoreCase(name)) {
 				return item;
 			}
 		}
-		
 		return null;
 	}
 
-	public static String convertToMultiline(String orig) {
-		return "<html>" + orig.replaceAll("\n", "<br>") + "</html>";
-	}
-
+	// Write a message received into the display area
 	public void sendMessage(String name, String text) {
 		this.chatDisplay.setText(this.chatDisplay.getText() + "\n" + name + ": " + text);
+	}
+
+	// Getters and Setters...
+
+	
+	/**
+	 * Returns an Image object that can then be painted on the screen. 
+	 * The url argument must specify an absolute {@link URL}. The name
+	 * argument is a specifier that is relative to the url argument. 
+	 * <p>
+	 * This method always returns immediately, whether or not the 
+	 * image exists. When this applet attempts to draw the image on
+	 * the screen, the data will be loaded. The graphics primitives 
+	 * that draw the image will incrementally paint on the screen. 
+	 *
+	 * @param  url  an absolute URL giving the base location of the image
+	 * @param  name the location of the image, relative to the url argument
+	 * @return      the image at the specified URL
+	 * @see         Image
+	 */
+	public JPanel getWriteAndSendPanel() {
+		return writeAndSendPanel;
+	}
+
+	public void setWriteAndSendPanel(JPanel writeAndSendPanel) {
+		this.writeAndSendPanel = writeAndSendPanel;
+	}
+
+	public JTextArea getChatDisplay() {
+		return chatDisplay;
+	}
+
+	public void setChatDisplay(JTextArea chatDisplay) {
+		this.chatDisplay = chatDisplay;
+	}
+
+	public JTextField getChatWritter() {
+		return chatWritter;
+	}
+
+	public void setChatWritter(JTextField chatWritter) {
+		this.chatWritter = chatWritter;
+	}
+
+	public JButton getSendMessageButton() {
+		return sendMessageButton;
+	}
+
+	public void setSendMessageButton(JButton sendMessageButton) {
+		this.sendMessageButton = sendMessageButton;
+	}
+
+	public JPanel getSendPanel() {
+		return sendPanel;
+	}
+
+	public void setSendPanel(JPanel sendPanel) {
+		this.sendPanel = sendPanel;
+	}
+
+	public JScrollPane getDisplayScrollPanel() {
+		return displayScrollPanel;
+	}
+
+	public void setDisplayScrollPanel(JScrollPane displayScrollPanel) {
+		this.displayScrollPanel = displayScrollPanel;
+	}
+
+	public JMenu getConnectToConcierge() {
+		return connectToConcierge;
+	}
+
+	public void setConnectToConcierge(JMenu connectToConcierge) {
+		this.connectToConcierge = connectToConcierge;
 	}
 
 	public Bavard getBavard() {
@@ -208,6 +294,14 @@ public class BavardFrame extends JFrame implements PapotageListener {
 
 	public void setBavard(Bavard bavard) {
 		this.bavard = bavard;
+	}
+
+	public BavardFrame getBavarFrame() {
+		return bavarFrame;
+	}
+
+	public void setBavarFrame(BavardFrame bavarFrame) {
+		this.bavarFrame = bavarFrame;
 	}
 
 	public String getPassword() {

@@ -42,12 +42,12 @@ public class AdministratorGUI extends JFrame {
 		
 		JPanel logoPanel = new JPanel();
 
-		JLabel imgLabel = new JLabel(new ImageIcon(EPapotage.class.getResource("/resources/logo.png")));
+		JLabel imgLabel = new JLabel(new ImageIcon(EPapotage.class.getResource("/fr/mrwormsy/inf641/epapotage/resources/logo.png")));
 		logoPanel.add(imgLabel);
 		
 		
 		JPanel polytechPanel = new JPanel();
-		JLabel imgLabel2 = new JLabel(new ImageIcon(EPapotage.class.getResource("/resources/polytech.png")));
+		JLabel imgLabel2 = new JLabel(new ImageIcon(EPapotage.class.getResource("/fr/mrwormsy/inf641/epapotage/resources/polytech.png")));
 		polytechPanel.add(imgLabel2);
 		
 		JLabel creditsPanel = new JLabel("By HENAFF Th\u00E9o & ROSA--MARTIN Antonin");
